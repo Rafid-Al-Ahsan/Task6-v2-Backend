@@ -7,18 +7,19 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://127.0.0.1:8080",
+        origin: "https://ilearning-task6.netlify.app",  // No trailing slash
         methods: ["GET", "POST"]
-    }
+    },
+    transports: ['polling'],  // Force polling as the transport method
 });
+
+// Middleware
+app.use(cors({ origin: "https://ilearning-task6.netlify.app" }));  // No trailing slash
+app.use(express.json());
+app.use(express.static('public'));
 
 const presentations = {};  // Store presentation data here (in-memory)
 const users = {};          // Track connected users
-
-// Middleware
-app.use(cors({ origin: "http://127.0.0.1:8080" }));
-app.use(express.json());
-app.use(express.static('public'));
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
